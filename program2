@@ -6,13 +6,13 @@ def load_csv(filename):
     headers=dataset.pop(0)
     return dataset,headers
     
-    class Node:
+class Node:
     def __init__(self,attribute):
         self.attribute=attribute
         self.children=[]
         self.answer=""
         
-        def subtables(data,col,delete):
+def subtables(data,col,delete):
     dic={}
     coldata=[row[col] for row in data]
     attr=list(set(coldata))
@@ -24,9 +24,8 @@ def load_csv(filename):
             del data[y][col]
         dic[key].append(data[y])
     return attr,dic
-    
-    
-    def entropy(S):
+        
+def entropy(S):
     attr=list(set(S))
     if len(attr)==1:
         return 0
@@ -38,8 +37,7 @@ def load_csv(filename):
         sums+=-1*cnt*math.log(cnt,2)
     return sums
     
-    
-    def compute_gain(data,col):
+def compute_gain(data,col):
     attrValues,dic=subtables(data,col,delete=False)
     total_entropy=entropy([row[-1] for row in data])
     for x in range(len(attrValues)):
@@ -48,14 +46,12 @@ def load_csv(filename):
         total_entropy-=ratio*entro
     return total_entropy
     
-    
-    def build_tree(data,features):
+def build_tree(data,features):
     lastcol=[row[-1] for row in data]
     if(len(set(lastcol)))==1:
         node=Node("")
         node.answer=lastcol[0]
         return node
-    
     n=len(data[0])-1
     gains=[compute_gain(data,col) for col in range(n)]
     split=gains.index(max(gains))
@@ -66,9 +62,8 @@ def load_csv(filename):
         child=build_tree(dic[attr[x]],fea)
         node.children.append((attr[x],child))
     return node
-    
-    
-    def print_tree(node,level):
+        
+def print_tree(node,level):
     if node.answer!="":
         print(" "*level,node.answer)
         return
@@ -77,7 +72,7 @@ def load_csv(filename):
         print("\t"*(level+1),value)
         print_tree(n,level+2)
         
-        def classify(node,x_test,features):
+def classify(node,x_test,features):
     if node.answer!="":
         print(node.answer)
         return
@@ -101,7 +96,7 @@ for xtest in testdata:
     
     
     
-    Outlook,Temperature,Humidity,Windy,Play
+Outlook,Temperature,Humidity,Windy,Play
 Sunny,Hot,High,weak,no
 Sunny,Hot,High,strong,no
 Overcast,Hot,High,weak,yes
