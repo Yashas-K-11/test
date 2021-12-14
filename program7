@@ -1,45 +1,46 @@
 import matplotlib.pyplot as plt
 from sklearn import datasets
-from sklearn cluster import KMeans
+from sklearn.cluster import KMeans
 import pandas as pd
 import numpy as np
 
-iris=datasets.load_iris()
-X=pd.DataFrame(iris.data)
+iris = datasets.load_iris()
+X = pd.DataFrame(iris.data)
 print(X)
-X.columns=['Sepal_Length','Sepal_Width','Petal_Length','Petal_Width']
-y=pd.DataFrame(iris.target)
-y.columns=['Targets']
+X.columns = ['Sepal_Length','Sepal_Width','Petal_Length','Petal_Width']
+y = pd.DataFrame(iris.target)
+y.columns = ['Targets']
 
-model=KMeans(in_clusters=3)
+model = KMeans(n_clusters=3)
 model.fit(X)
-print(model.label_)
-colormap=np.array(['red','lime','black'])
-plt.subplot(2,2,1)
-plt.scatter(X.Petal_Length,X.Petal_Width,c=colormap[y.Targets],s=40)
-plt.title('Real CLusters')
+print(model.labels_)
+colormap = np.array(['red', 'lime', 'black'])
+
+plt.subplot(2, 2, 1)
+plt.scatter(X.Petal_Length, X.Petal_Width, c=colormap[y.Targets], s=40)
+plt.title('Real Clusters')
 plt.xlabel('Petal Length')
 plt.ylabel('Petal Width')
 
-plt.subplot(2,2,2)
-plt.scatter(X.Petal_Length,X.Petal_Width,c=colormap[model.label_],s=40)
-plt.title('K-Mean Clustering')
+plt.subplot(2, 2, 2)
+plt.scatter(X.Petal_Length, X.Petal_Width, c=colormap[model.labels_], s=40)
+plt.title('K-Means Clustering')
 plt.xlabel('Petal Length')
 plt.ylabel('Petal Width')
 
 from sklearn import preprocessing
-scalar=preprocessing.StandardScalar()
-scalar.fit(X)
-xsa=scalar.transform(X)
-xs=pd.DataFrame(xsa,columns=X.columns)
-from sklearn.mixtures import GaussianMixture
-gmm=GaussianMixture(n_component=3)
-gmm.fit(xs)
+scaler = preprocessing.StandardScaler()
+scaler.fit(X)
+xsa = scaler.transform(X)
+xs = pd.DataFrame(xsa, columns = X.columns)
 
-gmm_y=gmm.predict(xs)
-plt.subplot(2,2,3)
-plt.scatter(X.Petal_Length,X.Petal_Width, C=colormap[gmm_y],s=40)
-plt.title('GMM clustering')
+from sklearn.mixture import GaussianMixture
+gmm = GaussianMixture(n_components=3)
+gmm.fit(xs)
+gmm_y = gmm.predict(xs)
+plt.subplot(2, 2, 3)
+plt.scatter(X.Petal_Length, X.Petal_Width, c=colormap[gmm_y], s=40)
+plt.title('GMM Clustering')
 plt.xlabel('Petal Length')
 plt.ylabel('Petal Width')
-print('Observation: The GMM using EM algorithm based clustering matched the time tables more closely then the KMean')
+print('Observation: The GMM using EM algorithm based clustering matched the true labels more closely than the Kmeans.')
